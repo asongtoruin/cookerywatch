@@ -3,11 +3,19 @@ import tweepy
 
 
 def check_followers_and_follow(api):
-    for follower in tweepy.Cursor(api.followers).items():
+    try:
+        followers = tweepy.Cursor(api.followers).items()
+    except tweepy.TweepError:
+        return None
+
+    for follower in followers:
         follower_json = follower._json
         check_user = follower_json['screen_name']
-        follow_info = api.show_friendship(source_screen_name=api.me().name,
-                                          target_screen_name=check_user)
+        try:
+            follow_info = api.show_friendship(source_screen_name=api.me().name,
+                                              target_screen_name=check_user)
+        except tweepy.TweepError:
+            return None
 
         # if the bot isn't following someone, follow them!
         if not follow_info[1].followed_by and not follow_info[1].following_received:
@@ -21,7 +29,11 @@ def check_tweets(api, db):
 
     # get BBCSport tweets using our API, and since the last tweet we checked
     # go through the process of adding it to our database
-    returned_tweets = get_user_tweets(api, 'BBCSport', last_checked)
+    try:
+        returned_tweets = get_user_tweets(api, 'BBCSport', last_checked)
+    except tweepy.TweepError:
+        return None
+
     for BBC_tweet in returned_tweets:
         tweet_to_database(BBC_tweet, db)
 
@@ -32,7 +44,12 @@ def check_tweets(api, db):
 
 def get_user_tweets(api, user_name, since):
     tweets = []
-    for tweet in api.user_timeline(screen_name=user_name, count=200, tweet_mode='extended', since_id=since):
+    try:
+        get_tweets = api.user_timeline(screen_name=user_name, count=200, tweet_mode='extended', since_id=since)
+    except tweepy.TweepError:
+        return None
+
+    for tweet in get_tweets:
         tweets.append(tweet._json)
     return tweets
 
@@ -91,7 +108,12 @@ def reply_to_tweets(api, db):
 # update later - does this work with private users? Test with since_id=781536232333508608L, see if Jade's tweet appears
 def get_user_mentions(api, since):
     tweets = []
-    for tweet in api.mentions_timeline(tweet_mode='extended', since_id=since):
+    try:
+        get_mentions = api.mentions_timeline(tweet_mode='extended', since_id=since)
+    except tweepy.TweepError:
+        return None
+
+    for tweet in get_mentions:
         tweets.append(tweet._json)
     return tweets
 
