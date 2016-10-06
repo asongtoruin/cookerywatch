@@ -44,6 +44,10 @@ def read_bbc_page(url):
             # this seems to be the indicator of the first paragraph of BBC sport stories - tag p, class introduction
             first_p = soup.find("p", class_="sp-story-body__introduction")
 
+            # check in case of video page
+            if first_p is None:
+                first_p = soup.find("p", class_="sp-media-asset__smp-message")
+
             # initialise - if we don't find anything, we'll still return an empty string
             body_text = ''
 
