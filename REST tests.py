@@ -26,6 +26,10 @@ initialise_api = tweepy.API(auth)
 foot_db = FootballDatabaseManager(get_lib_file('Footbot.db'),
                                   get_lib_file('Stadia_located.csv'))
 
+api_functions.check_followers_and_follow(api=initialise_api)
+api_functions.check_tweets(api=initialise_api, db=foot_db)
+api_functions.reply_to_tweets(api=initialise_api, db=foot_db)
+
 schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
 schedule.every(10).minutes.do(api_functions.check_tweets, api=initialise_api, db=foot_db)
 schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api, db=foot_db)
