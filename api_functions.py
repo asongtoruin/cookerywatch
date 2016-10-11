@@ -21,6 +21,7 @@ def check_followers_and_follow(api):
         if not follow_info[1].followed_by and not follow_info[1].following_received:
             print 'start following ' + check_user
             api.create_friendship(screen_name=check_user)
+    print '+' * 20
 
 
 def check_tweets(api, db):
@@ -29,29 +30,24 @@ def check_tweets(api, db):
 
     # get BBCSport tweets using our API, and since the last tweet we checked
     # go through the process of adding it to our database
-    try:
-        returned_tweets = get_user_tweets(api, 'BBCSport', last_checked)
-    except tweepy.TweepError:
-        return None
+    returned_tweets = get_user_tweets(api, 'BBCSport', last_checked)
 
-    for BBC_tweet in returned_tweets:
-        tweet_to_database(BBC_tweet, db)
-
-    # if we had any tweets returned, we want to update the last one we checked (to avoid duplication later on)
+    # it's possible for get_user_tweets to return None, if there's an error. Check we can iterate:
     if returned_tweets:
-        write_long_to_file(last_check_path, returned_tweets[0]['id'])
+        for BBC_tweet in returned_tweets:
+            tweet_to_database(BBC_tweet, db)
+
+    # update the last tweet checked (to avoid duplication later on)
+            write_long_to_file(last_check_path, returned_tweets[0]['id'])
+    print '+' * 20
 
 
 def get_user_tweets(api, user_name, since):
-    tweets = []
     try:
         get_tweets = api.user_timeline(screen_name=user_name, count=200, tweet_mode='extended', since_id=since)
+        return [tweet._json for tweet in get_tweets]
     except tweepy.TweepError:
         return None
-
-    for tweet in get_tweets:
-        tweets.append(tweet._json)
-    return tweets
 
 
 def tweet_to_database(tweet, db):
@@ -98,24 +94,22 @@ def reply_to_tweets(api, db):
     last_replied = read_file_to_long(last_replied_path)
 
     user_mentions = get_user_mentions(api, last_replied)
-    for tweet in user_mentions:
-        reply_to_tweet(api, tweet, db)
 
+    # get_user_mentions can return None - catch
     if user_mentions:
+        for tweet in user_mentions:
+            reply_to_tweet(api, tweet, db)
+
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
 
 
 # update later - does this work with private users? Test with since_id=781536232333508608L, see if Jade's tweet appears
 def get_user_mentions(api, since):
-    tweets = []
     try:
         get_mentions = api.mentions_timeline(tweet_mode='extended', since_id=since)
+        return [tweet._json for tweet in get_mentions]
     except tweepy.TweepError:
         return None
-
-    for tweet in get_mentions:
-        tweets.append(tweet._json)
-    return tweets
 
 
 def reply_to_tweet(api, tweet, db):
@@ -141,4 +135,6 @@ def reply_to_tweet(api, tweet, db):
     if not team_found:
         api.update_status('@{} {}'.format(reply_to_user, "I can't find a team here sorry!"),
                           in_reply_to_status_id=tweet['id'])
+    print '*'*20
     print('Replied to ' + reply_to_user)
+    print '+' * 20
