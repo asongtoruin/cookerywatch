@@ -24,7 +24,7 @@ def read_bbc_page(url):
     # open the URL - check we get an OK response
     try:
         resp = urllib2.urlopen(url)
-    except urllib2.HTTPError:
+    except urllib2.HTTPError, urllib2.URLError:
         return url, article_title, body_text, football_article
 
     if 200 <= resp.getcode() < 300:
