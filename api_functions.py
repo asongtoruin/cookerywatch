@@ -145,7 +145,7 @@ def post_map(api, db):
 
     max_teams = db.get_all_max_rows(yesterday_table)
     zero_count = db.count_zeroes(yesterday_table)
-    image_filepath = make_map(db.export_frequences_table(yesterday_table), yesterday)
+    image_filepath = make_map(db.export_frequencies_table(yesterday_table), yesterday)
 
     if len(max_teams) > 6:
         most_mentions = "6+ teams"

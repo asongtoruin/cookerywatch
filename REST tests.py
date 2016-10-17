@@ -30,12 +30,13 @@ api_functions.check_followers_and_follow(api=initialise_api)
 api_functions.check_tweets(api=initialise_api, db=foot_db)
 api_functions.reply_to_tweets(api=initialise_api, db=foot_db)
 
+# api_functions.post_map(initialise_api, foot_db)
+
 schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
 schedule.every(10).minutes.do(api_functions.check_tweets, api=initialise_api, db=foot_db)
 schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api, db=foot_db)
 
-# uncomment when mapping is set up:
-# schedule.every().day.at("09:00").do(api_functions.post_map, api=initialise_api, db=foot_db)
+schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api, db=foot_db)
 
 while True:
     schedule.run_pending()
