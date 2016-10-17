@@ -4,6 +4,7 @@ from dateutil.parser import parse
 from bs4 import BeautifulSoup
 import os
 import sys
+from datetime import datetime, timedelta
 
 
 # function to read a BBC sport page. Returns headline, full URL and body text
@@ -117,3 +118,18 @@ def get_lib_file(filename):
 def write_long_to_file(fpath, val):
     with open(fpath, 'wb') as file:
         file.write(str(val))
+
+
+def get_yesterday():
+    return (datetime.now().date() - timedelta(days=1)).strftime('%Y%m%d')
+
+
+def make_map(map_points, map_date):
+    lats = [row[1] for row in map_points]
+    lons = [row[2] for row in map_points]
+    counts = [row[3] for row in map_points]
+
+    ## INSERT MAP-MAKING FUNCTIONS HERE ###
+    ## RETURN - the filepath of the created image
+
+    return None
