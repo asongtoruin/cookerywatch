@@ -1,5 +1,5 @@
 from DatabaseManager import FootballDatabaseManager
-from HelperFunctions import get_lib_file
+from HelperFunctions import *
 import api_functions
 import tweepy
 import schedule
@@ -33,6 +33,9 @@ api_functions.reply_to_tweets(api=initialise_api, db=foot_db)
 schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
 schedule.every(10).minutes.do(api_functions.check_tweets, api=initialise_api, db=foot_db)
 schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api, db=foot_db)
+
+# uncomment when mapping is set up:
+# schedule.every().day.at("09:00").do(api_functions.post_map, api=initialise_api, db=foot_db)
 
 while True:
     schedule.run_pending()
