@@ -92,9 +92,9 @@ class FootballDatabaseManager(object):
         date_table = '_{}'.format(textdate_to_yyyymmdd(tweet_date))
         self.cur.execute("SELECT Count(*) FROM sqlite_master WHERE type='table' AND name=?", (date_table,))
         if self.cur.fetchone()[0] != 1:
-            self.cur.execute('CREATE TABLE {} (Team text, Lat float, Long float, ArticleCount integer DEFAULT 0)'
+            self.cur.execute('CREATE TABLE {} (Team text, ArticleCount integer DEFAULT 0)'
                              .format(date_table))
-            self.cur.execute('INSERT INTO {} (Team, Lat, Long) SELECT Team, Lat, Long FROM Stadia'
+            self.cur.execute('INSERT INTO {} (Team) SELECT Team FROM Stadia'
                              .format(date_table))
             self.conn.commit()
         self.cur.execute('SELECT ArticleCount FROM {} WHERE Team=?'.format(date_table), (team,))
@@ -111,3 +111,31 @@ class FootballDatabaseManager(object):
         self.cur.execute('SELECT * FROM LatestTweet WHERE Team=?', (team,))
         data = self.cur.fetchone()
         return data[2], data[3], data[4]
+
+    def export_frequencies_table(self, table_name):
+        # first check the table exists
+        self.cur.execute("SELECT Count(*) FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        if self.cur.fetchone()[0] != 1:
+            return None
+
+        self.cur.execute("SELECT {0}.Team AS Team, Stadia.Lat AS Lat, Stadia.Long AS Long, ArticleCount FROM {0} "
+                         "INNER JOIN Stadia ON {0}.Team = Stadia.Team ORDER BY ArticleCount DESC".format(table_name))
+        return self.cur.fetchall()
+
+    def count_zeroes(self, table_name):
+        # first check the table exists
+        self.cur.execute("SELECT Count(*) FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        if self.cur.fetchone()[0] != 1:
+            return None
+
+        self.cur.execute("SELECT Count(*) FROM {0} WHERE ArticleCount=0".format(table_name))
+        return self.cur.fetchone()[0]
+
+    def get_all_max_rows(self, table_name):
+        self.cur.execute("SELECT Count(*) FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        if self.cur.fetchone()[0] != 1:
+            return None
+
+        self.cur.execute("SELECT Team, ArticleCount FROM {0} "
+                         "WHERE ArticleCount=(SELECT Max(ArticleCount) FROM {0})".format(table_name))
+        return self.cur.fetchall()
