@@ -1,4 +1,4 @@
-from HelperFunctions import read_bbc_page, find_word, read_file_to_long, write_long_to_file, get_lib_file
+from HelperFunctions import *
 import tweepy
 
 
@@ -103,7 +103,6 @@ def reply_to_tweets(api, db):
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
 
 
-# update later - does this work with private users? Test with since_id=781536232333508608L, see if Jade's tweet appears
 def get_user_mentions(api, since):
     try:
         get_mentions = api.mentions_timeline(tweet_mode='extended', since_id=since)
@@ -138,3 +137,28 @@ def reply_to_tweet(api, tweet, db):
     print '*'*20
     print('Replied to ' + reply_to_user)
     print '+' * 20
+
+
+def post_map(api, db):
+    yesterday = get_yesterday()
+    yesterday_table = '_' + yesterday
+
+    max_teams = db.get_all_max_rows(yesterday_table)
+    zero_count = db.count_zeroes(yesterday_table)
+    image_filepath = make_map(db.export_frequences_table(yesterday_table), yesterday)
+
+    if len(max_teams) > 6:
+        most_mentions = "6+ teams"
+    else:
+        most_mentions = ', '.join([team[0] for team in max_teams])
+
+    most_count = max_teams[0][1]
+    nice_date = '/'.join([yesterday[-2:], yesterday[4:6], yesterday[:4]])
+
+    tweet_text = '{0}\n' \
+                 'Most mentions: {1} ({2})\n' \
+                 'Unmentioned teams: {3}'.format(nice_date, most_mentions, most_count, zero_count)
+
+    api.update_with_media(filename=image_filepath, status=tweet_text)
+
+    return None
