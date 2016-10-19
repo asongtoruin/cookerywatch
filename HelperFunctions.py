@@ -6,9 +6,11 @@ import os
 import sys
 from datetime import datetime, timedelta
 import matplotlib
+
 matplotlib.use('Agg')
-from mpl_toolkits.basemap import Basemap 
+from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
+
 
 # function to read a BBC sport page. Returns headline, full URL and body text
 def read_bbc_page(url):
@@ -132,15 +134,15 @@ def make_map(map_points, map_date):
     lons = [row[2] for row in map_points]
     counts = [row[3] for row in map_points]
 
-    ## INSERT MAP-MAKING FUNCTIONS HERE ###
-    ## RETURN - the filepath of the created image
-    map = Basemap(projection='merc', llcrnrlon=-11.85, llcrnrlat=49.34,
-              urcrnrlon=3.46, urcrnrlat=60.97,
-              resolution='h', lat_0=0, lon_0=0)
-    x, y = map(lons,lats)
-    map.drawcoastlines()
-    map.fillcontinents(color='black')
-    map.scatter(x,y,s=counts,marker='o',color='blue', zorder=10)
+    # draw the map
+    mentions_map = Basemap(projection='merc', llcrnrlon=-6.15, llcrnrlat=49.34,
+                           urcrnrlon=2.48, urcrnrlat=55.46,
+                           resolution='h', lat_0=0, lon_0=0)
+    x, y = mentions_map(lons, lats)
+    mentions_map.drawcoastlines()
+    mentions_map.fillcontinents(color='lightslategray')
+    mentions_map.scatter(x, y, s=counts, marker='o',
+                         c='#1288fe', linewidths=0.1, edgecolor='black', zorder=10)
     plt.savefig(map_date + '.jpg', bbox_inches='tight', pad_inches=0, dpi=500)
 
     return map_date + '.jpg'
