@@ -22,14 +22,14 @@ auth.set_access_token(keys_vals[2], keys_vals[3])
 initialise_api = tweepy.API(auth)
 
 api_functions.check_followers_and_follow(api=initialise_api)
-api_functions.reply_to_tweets(api=initialise_api, db=foot_db)
+api_functions.reply_to_tweets(api=initialise_api)
 
 # api_functions.post_map(initialise_api, foot_db)
 
 schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
-schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api, db=foot_db)
+schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api)
 
-schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api, db=foot_db)
+schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api)
 
 while True:
     schedule.run_pending()
