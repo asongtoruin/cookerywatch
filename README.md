@@ -1,9 +1,9 @@
-# BBCFootBot
-A project to enable analysis of the football teams mentioned in articles tweeted by the BBCSport Twitter account. It is still largely a work-in-progress.
+# cookerywatch
+Live-tweeting Christmas Eve cooking from a Rapsberry Pi, using the Camera module to post photos from the kitchen at a defined interval.
 
 ## Dependencies
-The project relies on the following:
+The project relies on the following libraries:
 - Tweepy
-- Matplotlib (and its Basemap toolkit)
 - Schedule
-- BeautifulSoup
+- Blinkt
+- picamera
