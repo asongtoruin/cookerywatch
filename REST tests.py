@@ -1,4 +1,3 @@
-from DatabaseManager import FootballDatabaseManager
 from HelperFunctions import *
 import api_functions
 import tweepy
@@ -22,18 +21,12 @@ auth.set_access_token(keys_vals[2], keys_vals[3])
 
 initialise_api = tweepy.API(auth)
 
-# initialise our database
-foot_db = FootballDatabaseManager(get_lib_file('Footbot.db'),
-                                  get_lib_file('Stadia_located.csv'))
-
 api_functions.check_followers_and_follow(api=initialise_api)
-api_functions.check_tweets(api=initialise_api, db=foot_db)
 api_functions.reply_to_tweets(api=initialise_api, db=foot_db)
 
 # api_functions.post_map(initialise_api, foot_db)
 
 schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
-schedule.every(10).minutes.do(api_functions.check_tweets, api=initialise_api, db=foot_db)
 schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api, db=foot_db)
 
 schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api, db=foot_db)
