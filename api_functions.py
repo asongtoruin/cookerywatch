@@ -47,12 +47,10 @@ def get_user_mentions(api, since):
         return None
 
 
-def post_map(api):
+def post_image(api, image_filepath):
     image_filepath = ''
 
-    tweet_text = '{0}\n' \
-                 'Most mentions: {1} ({2})\n' \
-                 'Unmentioned teams: {3}'.format(nice_date, most_mentions, most_count, zero_count)
+    tweet_text = 'TEST'
 
     # TODO - fix tweeting to send out picamera image
 
