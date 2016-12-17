@@ -6,7 +6,7 @@ from datetime import datetime
 
 def initialise_lights():
     blinkt.clear()
-    blinkt.set_brightness(0.5)
+    blinkt.set_brightness(0.2)
     change_light(0, 102, 255, 102)
 
 

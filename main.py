@@ -1,8 +1,11 @@
 from HelperFunctions import *
+import raspberry_functions as rasp
 import api_functions
 import tweepy
 import schedule
 import time
+
+rasp.initialise_lights()
 
 # store in files - values kept secret if you back up to e.g. GitHub
 keys = ['consumer_key', 'consumer_secret', 'access_token', 'access_token_secret']
@@ -21,16 +24,18 @@ auth.set_access_token(keys_vals[2], keys_vals[3])
 
 initialise_api = tweepy.API(auth)
 
-api_functions.check_followers_and_follow(api=initialise_api)
-api_functions.reply_to_tweets(api=initialise_api)
+api_functions.post_image(initialise_api, rasp.take_photo())
+
+#api_functions.check_followers_and_follow(api=initialise_api)
+#api_functions.reply_to_tweets(api=initialise_api)
 
 # api_functions.post_map(initialise_api, foot_db)
 
-schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
-schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api)
+#schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
+#schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api)
 
-schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api)
+#schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)

@@ -34,6 +34,7 @@ def reply_to_tweets(api):
     if user_mentions:
         for tweet in user_mentions:
             # TODO - set up reading tweets to the account and setting pi light colour accordingly.
+            x = 2
 
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
         return
@@ -48,8 +49,6 @@ def get_user_mentions(api, since):
 
 
 def post_image(api, image_filepath):
-    image_filepath = ''
-
     tweet_text = 'TEST'
 
     # TODO - fix tweeting to send out picamera image
