@@ -1,6 +1,6 @@
 from HelperFunctions import *
 import tweepy
-
+import re
 
 def check_followers_and_follow(api):
     try:
@@ -34,7 +34,8 @@ def reply_to_tweets(api):
     if user_mentions:
         for tweet in user_mentions:
             # TODO - set up reading tweets to the account and setting pi light colour accordingly.
-            x = 2
+            main = tweet['full text']
+            
 
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
         return
@@ -48,11 +49,8 @@ def get_user_mentions(api, since):
         return None
 
 
-def post_image(api, image_filepath):
-    tweet_text = 'TEST'
-
+def post_image(api, image_filepath, tweet_text):
     # TODO - fix tweeting to send out picamera image
-
     api.update_with_media(filename=image_filepath, status=tweet_text)
 
     return None

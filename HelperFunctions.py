@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import os
 import sys
 from datetime import datetime, timedelta
+from PIL import Image
 
 
 def read_file_to_long(fpath):
@@ -25,3 +26,23 @@ def get_lib_file(filename):
 def write_long_to_file(fpath, val):
     with open(fpath, 'wb') as file:
         file.write(str(val))
+
+
+def colour_block(r, g, b):
+    im = Image.new('RGBA', (100, 100))
+
+    for x in range(100):
+        for y in range(100):
+            im.putpixel((x,y), (r, g, b))
+    
+    out_name = '{}.jpg'.format('_'.join(map(str, [r, g, b])))
+    im.save(out_name)
+    return out_name
+
+
+def colours_from_text(input_text):
+    out = re.findall('(\d)', input_text)
+    colours = [0, 0, 0]
+    for i,x in enumerate(out[:3]):
+        colours[i] = int(x)
+    return colours

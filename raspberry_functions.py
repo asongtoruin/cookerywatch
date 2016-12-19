@@ -21,9 +21,11 @@ def take_photo():
     change_light(1, 255, 153, 51)
     sleep(5)
     output_name = '{}.jpg'.format(datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S'))
+    nice_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    camera.annotate_text = nice_time
     camera.capture(output_name)
     change_light(1, 0, 0, 0)
-    return output_name
+    return output_name, nice_time
 
 
 if __name__ == '__main__':
