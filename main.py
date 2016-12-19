@@ -24,10 +24,12 @@ auth.set_access_token(keys_vals[2], keys_vals[3])
 
 initialise_api = tweepy.API(auth)
 
-api_functions.post_image(initialise_api, *rasp.take_photo())
+# api_functions.post_image(initialise_api, *rasp.take_photo())
 
 #api_functions.check_followers_and_follow(api=initialise_api)
-#api_functions.reply_to_tweets(api=initialise_api)
+api_functions.react_to_tweets(api=initialise_api)
+
+time.sleep(30)
 
 # api_functions.post_map(initialise_api, foot_db)
 

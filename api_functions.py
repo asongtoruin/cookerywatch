@@ -1,6 +1,8 @@
-from HelperFunctions import *
-import tweepy
-import re
+from HelperFunctions import * 
+import tweepy 
+import re 
+from raspberry_functions import *
+import random
 
 def check_followers_and_follow(api):
     try:
@@ -24,7 +26,7 @@ def check_followers_and_follow(api):
     print '+' * 20
 
 
-def reply_to_tweets(api):
+def react_to_tweets(api):
     last_replied_path = get_lib_file('lastreplied.txt')
     last_replied = read_file_to_long(last_replied_path)
 
@@ -34,8 +36,10 @@ def reply_to_tweets(api):
     if user_mentions:
         for tweet in user_mentions:
             # TODO - set up reading tweets to the account and setting pi light colour accordingly.
-            main = tweet['full text']
-            
+            main = tweet['full_text']
+            provided_colours = colours_from_text(main)
+            set_light = random.choice(range(2, 8))
+            change_light(set_light, *provided_colours)
 
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
         return
