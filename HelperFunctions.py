@@ -29,10 +29,11 @@ def write_long_to_file(fpath, val):
 
 
 def colour_block(r, g, b):
-    im = Image.new('RGBA', (100, 100))
+    image_size = 200
+    im = Image.new('RGBA', (image_size, image_size))
 
-    for x in range(100):
-        for y in range(100):
+    for x in range(image_size):
+        for y in range(image_size):
             im.putpixel((x,y), (r, g, b))
     
     out_name = '{}.jpg'.format('_'.join(map(str, [r, g, b])))
@@ -41,7 +42,7 @@ def colour_block(r, g, b):
 
 
 def colours_from_text(input_text):
-    out = re.findall('(\d)', input_text)
+    out = re.findall('(\d+)', input_text)
     colours = [0, 0, 0]
     for i,x in enumerate(out[:3]):
         colours[i] = int(x)

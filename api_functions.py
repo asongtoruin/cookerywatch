@@ -40,6 +40,7 @@ def react_to_tweets(api):
             provided_colours = colours_from_text(main)
             set_light = random.choice(range(2, 8))
             change_light(set_light, *provided_colours)
+            reply_to_tweet(api, tweet, set_light, provided_colours)
 
         write_long_to_file(last_replied_path, user_mentions[0]['id'])
         return
@@ -56,5 +57,14 @@ def get_user_mentions(api, since):
 def post_image(api, image_filepath, tweet_text):
     # TODO - fix tweeting to send out picamera image
     api.update_with_media(filename=image_filepath, status=tweet_text)
-
     return None
+
+
+def reply_to_tweet(api, tweet, pixel, colours):
+    reply_to_user = tweet['user']['screen_name']
+    reply_text = 'Changed light number {}! Merry Christmas, nerd'.format(pixel)
+    out_image = colour_block(*colours)
+    api.update_with_media(status='@{} {}'.format(reply_to_user, reply_text), in_reply_to_status_id=tweet['id'], filename=out_image)
+    print '*'*20
+    print('Replied to ' + reply_to_user)
+    print '+' * 20
