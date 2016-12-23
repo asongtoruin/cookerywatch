@@ -17,6 +17,8 @@ def change_light(pixel, r, g, b):
 
 def take_photo():
     camera = PiCamera()
+    camera.rotation = 180
+    camera.resolution = (1920, 1080)
     camera.start_preview()
     change_light(1, 255, 153, 51)
     sleep(5)
@@ -25,6 +27,9 @@ def take_photo():
     camera.annotate_text = nice_time
     camera.capture(output_name)
     change_light(1, 0, 0, 0)
+    camera.stop_preview()
+    camera.close()
+    print 'Took photo! {}'.format(nice_time)
     return output_name, nice_time
 
 

@@ -16,28 +16,19 @@ for i in range(len(keys)):
         keys_vals[i] = f.read()
 
 # do the auth dance
-# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-# auth.set_access_token(access_token, access_token_secret)
-
 auth = tweepy.OAuthHandler(keys_vals[0], keys_vals[1])
 auth.set_access_token(keys_vals[2], keys_vals[3])
 
 initialise_api = tweepy.API(auth)
 
-# api_functions.post_image(initialise_api, *rasp.take_photo())
-
-#api_functions.check_followers_and_follow(api=initialise_api)
+api_functions.check_followers_and_follow(api=initialise_api)
 api_functions.react_to_tweets(api=initialise_api)
+api_functions.take_and_post_image(api=initialise_api)
 
-time.sleep(30)
+schedule.every(10).minutes.do(api_functions.take_and_post_image, api=initialise_api)
+schedule.every(5).minutes.do(api_functions.react_to_tweets, api=initialise_api)
+schedule.every(15).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
 
-# api_functions.post_map(initialise_api, foot_db)
-
-#schedule.every(10).minutes.do(api_functions.check_followers_and_follow, api=initialise_api)
-#schedule.every(10).minutes.do(api_functions.reply_to_tweets, api=initialise_api)
-
-#schedule.every().day.at("08:30").do(api_functions.post_map, api=initialise_api)
-
-#while True:
-#    schedule.run_pending()
-#    time.sleep(1)
+while True:
+    schedule.run_pending()
+    time.sleep(1)

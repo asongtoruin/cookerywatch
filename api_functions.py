@@ -54,9 +54,9 @@ def get_user_mentions(api, since):
         return None
 
 
-def post_image(api, image_filepath, tweet_text):
-    # TODO - fix tweeting to send out picamera image
-    api.update_with_media(filename=image_filepath, status=tweet_text)
+def take_and_post_image(api):
+    out_name, out_time = take_photo()
+    api.update_with_media(filename=out_name, status=out_time)
     return None
 
 

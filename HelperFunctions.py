@@ -1,11 +1,12 @@
 import urllib2
 import re
 from dateutil.parser import parse
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 import os
 import sys
 from datetime import datetime, timedelta
 from PIL import Image
+from random import randint
 
 
 def read_file_to_long(fpath):
@@ -46,4 +47,6 @@ def colours_from_text(input_text):
     colours = [0, 0, 0]
     for i,x in enumerate(out[:3]):
         colours[i] = int(x)
+    if all(x == 0 for x in colours):
+        colours = [randint(0, 255), randint(0, 255), randint(0, 255)]
     return colours
